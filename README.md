@@ -10,9 +10,4 @@ to disable the virtual environment:
 `deactivate` or `source deactivate`
 
 install following packages from pip:
-`fastapi`
-`sqlmodel`
-`pydantic` > not required if `sqlmodel` installed
-`SQLAlchemy` > not required if `sqlmodel` installed
-`mysqlclient`
-`mysql-connector-python`
+`fastapi`, `sqlmodel`, `pydantic` (not required if `sqlmodel` installed), `SQLAlchemy` (not required if `sqlmodel` installed), `mysqlclient`, `mysql-connector-python`

@@ -1,11 +1,10 @@
-import uuid
 from sqlmodel import Field, SQLModel
 
 
 class ReasonAssertion(SQLModel, table=True):
     __tablename__ = "reason_assertion"
 
-    id: uuid.UUID = Field(primary_key=True)
-    question_id: uuid.UUID = Field(foreign_key="question_details.id")
+    id: str = Field(primary_key=True)  # uuid
+    question_id: str = Field(foreign_key="question_details.id")  # uuid
     reason: str
     assertion: str

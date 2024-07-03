@@ -1,13 +1,12 @@
-import uuid
 from typing import List
 from pydantic import BaseModel
 
 
 class Question(BaseModel):
-    id: uuid.UUID | None = None
+    id: str | None = None  # uuid
     question_type_id: int
-    subject_id: uuid.UUID | None = None  # remove none later
-    difficulty: uuid.UUID | None = None  # remove none later
+    subject_id: str | None = None  # uuid
+    difficulty: str | None = None  # uuid
     marks: int
     content: str | None = None
     fib_missing_word: List[str] | None = None

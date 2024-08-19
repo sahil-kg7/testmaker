@@ -10,10 +10,10 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_school():
-    return await SchoolService.get_school_list()
+async def getSchool():
+    return await SchoolService.getSchoolList()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_school(school: dbSchool) -> dbSchool | None:
-    return await SchoolService.create_school(school)
+async def createSchool(school: dbSchool) -> dbSchool | None:
+    return await SchoolService.createSchool(school)

@@ -3,10 +3,10 @@ from models.dbModels import Subject as dbSubject
 from db import SubjectRepo
 
 
-async def get_subject_list():
-    return await SubjectRepo.get_subject_list()
+async def getSubjectList():
+    return await SubjectRepo.getSubjectList()
 
 
-async def create_subject(subject: dbSubject):
+async def createSubject(subject: dbSubject):
     subject.id = uuid.uuid4()
-    return await SubjectRepo.create_subject(subject)
+    return await SubjectRepo.createSubject(subject)

@@ -3,10 +3,10 @@ from models.dbModels import Class as dbClass
 from db import ClassRepo
 
 
-async def get_class_list():
-    classList: List[dbClass] = await ClassRepo.get_class_list()
+async def getClassList():
+    classList: List[dbClass] = await ClassRepo.getClassList()
     return classList
 
 
-async def create_class(class_: dbClass):
-    return await ClassRepo.create_class(class_)
+async def createClass(class_: dbClass):
+    return await ClassRepo.createClass(class_)

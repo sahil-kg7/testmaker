@@ -16,3 +16,4 @@ from .Test import Test as Test
 from .TestQuestionMap import TestQuestionMap as TestQuestionMap
 from .TestSectionMap import TestSectionMap as TestSectionMap
 from .TestType import TestType as TestType
+from .Mcq import toMcq as toMcq

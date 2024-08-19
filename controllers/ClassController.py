@@ -10,10 +10,10 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_class():
-    return await ClassService.get_class_list()
+async def getClass():
+    return await ClassService.getClassList()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_class(class_: dbClass) -> dbClass | None:
-    return await ClassService.create_class(class_)
+async def createClass(class_: dbClass) -> dbClass | None:
+    return await ClassService.createClass(class_)

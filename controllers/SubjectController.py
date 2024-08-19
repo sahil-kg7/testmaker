@@ -10,10 +10,10 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_subject():
-    return await SubjectService.get_subject_list()
+async def getSubject():
+    return await SubjectService.getSubjectList()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_subject(subject: dbSubject) -> dbSubject | None:
-    return await SubjectService.create_subject(subject)
+async def createSubject(subject: dbSubject) -> dbSubject | None:
+    return await SubjectService.createSubject(subject)

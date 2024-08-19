@@ -10,10 +10,10 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_question_list():
-    return await QuestionService.get_question_list()
+async def getQuestionList():
+    return await QuestionService.getQuestionList()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_question(question: Question) -> Question | None:
-    return await QuestionService.create_question(question)
+async def createQuestion(question: Question) -> Question | None:
+    return await QuestionService.createQuestion(question)

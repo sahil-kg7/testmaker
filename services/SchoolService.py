@@ -3,10 +3,10 @@ from models.dbModels import School as dbSchool
 from db import SchoolRepo
 
 
-async def get_school_list():
-    schoolList: List[dbSchool] = await SchoolRepo.get_school_list()
+async def getSchoolList():
+    schoolList: List[dbSchool] = await SchoolRepo.getSchoolList()
     return schoolList
 
 
-async def create_school(school: dbSchool):
-    return await SchoolRepo.create_school(school)
+async def createSchool(school: dbSchool):
+    return await SchoolRepo.createSchool(school)

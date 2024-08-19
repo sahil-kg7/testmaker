@@ -6,7 +6,7 @@ from models.dbModels import Subject as dbSubject
 engine = sql_engine()
 
 
-async def get_subject_list():
+async def getSubjectList():
     subjectList: List[dbSubject] = []
     with Session(engine) as session:
         subjectList = session.exec(select(dbSubject)).all()
@@ -14,7 +14,7 @@ async def get_subject_list():
     return subjectList
 
 
-async def create_subject(subject: dbSubject) -> dbSubject:
+async def createSubject(subject: dbSubject) -> dbSubject:
     subject_obj = dbSubject()
     with Session(engine) as session:
         session.add(subject)

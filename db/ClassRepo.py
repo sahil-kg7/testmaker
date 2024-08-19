@@ -6,7 +6,7 @@ from models.dbModels import Class as dbClass
 engine = sql_engine()
 
 
-async def get_class_list():
+async def getClassList():
     classList: List[dbClass] = []
     with Session(engine) as session:
         classList = session.exec(select(dbClass)).all()
@@ -14,7 +14,7 @@ async def get_class_list():
     return classList
 
 
-async def create_class(class_: dbClass) -> dbClass:
+async def createClass(class_: dbClass) -> dbClass:
     class_obj = dbClass
     with Session(engine) as session:
         session.add(class_)

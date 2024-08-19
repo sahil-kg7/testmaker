@@ -6,7 +6,7 @@ from models.dbModels import School as dbSchool
 engine = sql_engine()
 
 
-async def get_school_list():
+async def getSchoolList():
     schoolList: List[dbSchool] = []
     with Session(engine) as session:
         schoolList = session.exec(select(dbSchool)).all()
@@ -14,7 +14,7 @@ async def get_school_list():
     return schoolList
 
 
-async def create_school(school: dbSchool) -> dbSchool:
+async def createSchool(school: dbSchool) -> dbSchool:
     school_obj = dbSchool()
     with Session(engine) as session:
         session.add(school)

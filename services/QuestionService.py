@@ -4,26 +4,77 @@ from models import Question
 from enums.QuestionTypeEnum import QuestionTypeEnum
 
 
-async def get_question_list():
-    return await QuestionRepo.get_question_list()
+async def getQuestionList():
+    return await QuestionRepo.getQuestionList()
 
 
-async def create_question(question: Question):
-    question.id = uuid.uuid4()
+async def createQuestion(question: Question):
     match (QuestionTypeEnum(question.question_type_id).name):
         case QuestionTypeEnum.general.name:
-            print("Case general")
+            return await createGeneral(question)
         case QuestionTypeEnum.mcq.name:
-            print("Case 2")
+            return await createMcq(question)
         case QuestionTypeEnum.fib.name:
-            print("Case 3")
+            return await createFib(question)
         case QuestionTypeEnum.match.name:
-            print("Case 4")
+            return await createMatch(question)
         case QuestionTypeEnum.trueFalse.name:
-            print("Case 5")
+            return await createTrueFalse(question)
         case QuestionTypeEnum.subjective.name:
-            print("Case 6")
+            return await createSubjective(question)
         case QuestionTypeEnum.reasonAssertion.name:
-            print("Case 7")
+            return await createReasonAssertion(question)
         case _:
             print("Invalid question type")
+
+
+async def createGeneral(question: Question):
+    try:
+        createdQuestion = await QuestionRepo.createGeneral(question)
+        return createdQuestion
+    except:
+        print("Error occurred while creating general question")
+        raise
+
+
+async def createMcq(question: Question):
+    try:
+        createdQuestion = await QuestionRepo.createMcq(question)
+        return createdQuestion
+    except:
+        print("Error occurred while creating mcq question")
+
+
+async def createFib(question: Question):
+    try:
+        print("fib")
+    except:
+        print("Error occurred while creating fib question")
+
+
+async def createMatch(question: Question):
+    try:
+        print("match")
+    except:
+        print("Error occurred while creating match question")
+
+
+async def createTrueFalse(question: Question):
+    try:
+        print("truefalse")
+    except:
+        print("Error occurred while creating true-false question")
+
+
+async def createSubjective(question: Question):
+    try:
+        print("subjective")
+    except:
+        print("Error occurred while creating subjective question")
+
+
+async def createReasonAssertion(question: Question):
+    try:
+        print("reasonassertion")
+    except:
+        print("Error occurred while creating reason assertion question")

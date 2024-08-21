@@ -1,7 +1,7 @@
 from typing import List
 from pydantic import BaseModel
 
-from models.dbModels import Mcq
+from models.dbModels import Fib, MatchA, MatchB, Mcq, ReasonAssertion
 
 
 class Question(BaseModel):
@@ -11,12 +11,11 @@ class Question(BaseModel):
     difficulty: str | None = None  # uuid
     marks: int
     content: str | None = None
-    fib_missing_word: List[str] | None = None
-    match_a_option: List[str] | None = None
-    match_b_option: List[str] | None = None
+    fib_missing_word: List[Fib] | None = None
+    match_a_option: List[MatchA] | None = None
+    match_b_option: List[MatchB] | None = None
     mcq_option: List[Mcq] | None = None
-    reason: str | None = None
-    assertion: str | None = None
+    reason_assertion: ReasonAssertion | None = None
 
 
 def toQuestion(res) -> Question:
@@ -35,6 +34,5 @@ def toQuestion(res) -> Question:
         match_a_option=res.match_a_option if "match_a_option" in res._fields else None,
         match_b_option=res.match_b_option if "match_b_option" in res._fields else None,
         mcq_option=res.mcq_option if "mcq_option" in res._fields else None,
-        reason=res.reason if "reason" in res._fields else None,
-        assertion=res.assertion if "assertion" in res._fields else None,
+        reason_assertion=res.reason_assertion if "reason" in res._fields else None,
     )

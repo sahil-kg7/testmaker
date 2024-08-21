@@ -17,3 +17,7 @@ from .TestQuestionMap import TestQuestionMap as TestQuestionMap
 from .TestSectionMap import TestSectionMap as TestSectionMap
 from .TestType import TestType as TestType
 from .Mcq import toMcq as toMcq
+from .Fib import toFib as toFib
+from .MatchA import toMatchA as toMatchA
+from .MatchB import toMatchB as toMatchB
+from .ReasonAssertion import toReasonAssertion as toReasonAssertion

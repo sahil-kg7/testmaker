@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", status_code=status.HTTP_200_OK)
 async def getQuestionList():
     return await QuestionService.getQuestionList()
 

@@ -43,38 +43,51 @@ async def createMcq(question: Question):
         return createdQuestion
     except:
         print("Error occurred while creating mcq question")
+        raise
 
 
 async def createFib(question: Question):
     try:
-        print("fib")
+        createdQuestion = await QuestionRepo.createFib(question)
+        return createdQuestion
     except:
         print("Error occurred while creating fib question")
+        raise
 
 
 async def createMatch(question: Question):
     try:
-        print("match")
+        createdQuestion = await QuestionRepo.createMatch(question)
+        return createdQuestion
     except:
         print("Error occurred while creating match question")
+        raise
 
 
 async def createTrueFalse(question: Question):
     try:
-        print("truefalse")
+        ## only question type will be set to true/false
+        createdQuestion = await QuestionRepo.createGeneral(question)
+        return createdQuestion
     except:
         print("Error occurred while creating true-false question")
+        raise
 
 
 async def createSubjective(question: Question):
     try:
-        print("subjective")
+        ## only question type will be set to subjective
+        createdQuestion = await QuestionRepo.createGeneral(question)
+        return createdQuestion
     except:
         print("Error occurred while creating subjective question")
+        raise
 
 
 async def createReasonAssertion(question: Question):
     try:
-        print("reasonassertion")
+        createdQuestion = await QuestionRepo.createReasonAssertion(question)
+        return createdQuestion
     except:
         print("Error occurred while creating reason assertion question")
+        raise

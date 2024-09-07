@@ -1,4 +1,3 @@
-import uuid
 from db import QuestionRepo
 from models import Question
 from enums.QuestionTypeEnum import QuestionTypeEnum

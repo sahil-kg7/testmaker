@@ -8,4 +8,8 @@ class Mcq(SQLModel, table=True):
 
 
 def toMcq(res) -> Mcq:
-    return Mcq(id=res.id, question_id=res.question_id, option_text=res.option_text)
+    return Mcq(
+        id=res.id,
+        question_id=res.question_id,
+        option_text=res.option_text,
+    )

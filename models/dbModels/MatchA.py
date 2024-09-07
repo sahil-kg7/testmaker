@@ -10,4 +10,8 @@ class MatchA(SQLModel, table=True):
 
 
 def toMatchA(res) -> MatchA:
-    return MatchA(id=res.id, question_id=res.question_id, match_option=res.match_option)
+    return MatchA(
+        id=res.id,
+        question_id=res.question_id,
+        match_option=res.match_option,
+    )

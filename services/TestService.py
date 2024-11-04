@@ -7,3 +7,7 @@ async def getTestList():
 
 async def createTest(test):
     return await TestRepo.createTest(test)
+
+
+async def getTestTypes():
+    return await TestRepo.getTestTypes()

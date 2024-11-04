@@ -18,3 +18,8 @@ async def getTest():
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def createTest(test: TestModel) -> TestModel | None:
     return await TestService.createTest(test)
+
+
+@router.get("/types")
+async def getTestTypes():
+    return await TestService.getTestTypes()

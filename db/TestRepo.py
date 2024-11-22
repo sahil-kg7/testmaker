@@ -27,3 +27,14 @@ async def getTestTypes():
         test_types = session.exec(select(dbTestType)).all()
         session.close()
     return test_types
+
+
+async def createTest(test: TestModel) -> TestModel:
+    created_test: TestModel
+
+    with Session(engine) as session:
+        session.add(test)
+        session.commit()
+        test_obj = session.exec(select(Test).where(Test.id == test.id)).first()
+        session.close()
+    return test_obj

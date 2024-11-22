@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from db_config import get_db
+
 
 from controllers import (
     ClassController,
@@ -10,11 +12,11 @@ from controllers import (
 
 app = FastAPI()
 
-app.include_router(ClassController.router)
-app.include_router(SchoolController.router)
-app.include_router(SubjectController.router)
+# app.include_router(ClassController.router)
+# app.include_router(SchoolController.router)
+# app.include_router(SubjectController.router)
 app.include_router(QuestionController.router)
-app.include_router(TestController.router)
+# app.include_router(TestController.router)
 
 
 @app.get("/")

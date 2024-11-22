@@ -1,8 +1,10 @@
+from typing import Generator
 from sqlalchemy import URL, create_engine
 from configparser import ConfigParser
+from sqlmodel import Session
 
 
-def read_config(filename="app_config.ini", section="mysql"):
+def __read_config(filename="app_config.ini", section="mysql"):
     config = ConfigParser()
     config.read(filename)
     if config.has_section(section):
@@ -12,10 +14,10 @@ def read_config(filename="app_config.ini", section="mysql"):
     return items
 
 
-data = read_config()
+data = __read_config()
 
 
-def sql_engine():
+def __sql_engine():
     url_obj = URL.create(
         drivername=data["drivername"],
         username=data["username"],
@@ -25,3 +27,17 @@ def sql_engine():
         database=data["database"],
     )
     return create_engine(url_obj)
+
+
+def get_db() -> Generator[Session, None, None]:
+    engine = __sql_engine()
+    try:
+        with Session(engine) as db:
+            db.begin()
+            yield db
+            db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()

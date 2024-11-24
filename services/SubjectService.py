@@ -1,12 +1,16 @@
 import uuid
 from models.dbModels import Subject as dbSubject
-from db import SubjectRepo
+from db.SubjectRepo import SubjectRepo
 
 
-async def getSubjectList():
-    return await SubjectRepo.getSubjectList()
+class SubjectService:
+    def __init__(self, db):
+        self.db = db
+        self.subjectRepo = SubjectRepo(db)
 
+    async def getSubjectList(self):
+        return await self.subjectRepo.getSubjectList()
 
-async def createSubject(subject: dbSubject):
-    subject.id = uuid.uuid4()
-    return await SubjectRepo.createSubject(subject)
+    async def createSubject(self, subject: dbSubject):
+        subject.id = uuid.uuid4()
+        return await self.subjectRepo.createSubject(subject)

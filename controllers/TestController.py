@@ -1,25 +1,32 @@
-# from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
+from sqlmodel import Session
 
-# from models import TestModel
-# from services import TestService
+from db_config import get_db
+from models import TestModel
+from services.TestService import TestService
 
-# router = APIRouter(
-#     prefix="/test",
-#     tags=["test"],
-#     responses={404: {"description": "Not found"}},
-# )
-
-
-# @router.get("/")
-# async def getTest():
-#     return await TestService.getTestList()
+router = APIRouter(
+    prefix="/test",
+    tags=["test"],
+    responses={404: {"description": "Not found"}},
+)
 
 
-# @router.post("/", status_code=status.HTTP_201_CREATED)
-# async def createTest(test: TestModel) -> TestModel | None:
-#     return await TestService.createTest(test)
+@router.get("/")
+async def getTest(db: Session = Depends(get_db)):
+    testService: TestService = TestService(db)
+    return await testService.getTestList()
 
 
-# @router.get("/types")
-# async def getTestTypes():
-#     return await TestService.getTestTypes()
+@router.post("/", status_code=status.HTTP_201_CREATED)
+async def createTest(
+    test: TestModel, db: Session = Depends(get_db)
+) -> TestModel | None:
+    testService: TestService = TestService(db)
+    return await testService.createTest(test)
+
+
+@router.get("/types")
+async def getTestTypes(db: Session = Depends(get_db)):
+    testService: TestService = TestService(db)
+    return await testService.getTestTypes()

@@ -1,14 +1,18 @@
-from db import TestRepo
+from sqlmodel import Session
+from db.TestRepo import TestRepo
 from models import TestModel
 
 
-async def getTestList():
-    return await TestRepo.getTestList()
+class TestService:
+    def __init__(self, db: Session):
+        self.db = db
+        self.testRepo = TestRepo(db)
 
+    async def getTestList(self):
+        return await self.testRepo.getTestList()
 
-async def createTest(test: TestModel):
-    return await TestRepo.createTest(test)
+    async def createTest(self, test: TestModel):
+        return await self.testRepo.createTest(test)
 
-
-async def getTestTypes():
-    return await TestRepo.getTestTypes()
+    async def getTestTypes(self):
+        return await self.testRepo.getTestTypes()

@@ -1,26 +1,19 @@
-from typing import List
-from db_config import sql_engine
 from sqlmodel import Session, select
 from models.dbModels import Subject as dbSubject
 
-engine = sql_engine()
 
+class SubjectRepo:
+    def __init__(self, db: Session):
+        self.db = db
 
-async def getSubjectList():
-    subjectList: List[dbSubject] = []
-    with Session(engine) as session:
-        subjectList = session.exec(select(dbSubject)).all()
-        session.close()
-    return subjectList
+    async def getSubjectList(self):
+        return self.db.exec(select(dbSubject)).all()
 
-
-async def createSubject(subject: dbSubject) -> dbSubject:
-    subject_obj = dbSubject()
-    with Session(engine) as session:
-        session.add(subject)
-        session.commit()
-        subject_obj = session.exec(
+    async def createSubject(self, subject: dbSubject) -> dbSubject:
+        subject_obj = dbSubject()
+        self.db.add(subject)
+        self.db.expire()
+        subject_obj = self.db.exec(
             select(dbSubject).where(dbSubject.id == subject.id)
         ).first()
-        session.close()
-    return subject_obj
+        return subject_obj

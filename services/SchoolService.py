@@ -1,12 +1,15 @@
-from typing import List
+from sqlmodel import Session
 from models.dbModels import School as dbSchool
-from db import SchoolRepo
+from db.SchoolRepo import SchoolRepo
 
 
-async def getSchoolList():
-    schoolList: List[dbSchool] = await SchoolRepo.getSchoolList()
-    return schoolList
+class SchoolService:
+    def __init__(self, db: Session):
+        self.db = db
+        self.schoolRepo = SchoolRepo(db)
 
+    async def getSchoolList(self):
+        return await self.schoolRepo.getSchoolList()
 
-async def createSchool(school: dbSchool):
-    return await SchoolRepo.createSchool(school)
+    async def createSchool(self, school: dbSchool):
+        return await self.schoolRepo.createSchool(school)

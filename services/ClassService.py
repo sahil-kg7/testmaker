@@ -1,12 +1,15 @@
-from typing import List
+from sqlmodel import Session
 from models.dbModels import Class as dbClass
-from db import ClassRepo
+from db.ClassRepo import ClassRepo
 
 
-async def getClassList():
-    classList: List[dbClass] = await ClassRepo.getClassList()
-    return classList
+class ClassService:
+    def __init__(self, db: Session):
+        self.db = db
+        self.classRepo = ClassRepo(db)
 
+    async def getClassList(self):
+        return await self.classRepo.getClassList()
 
-async def createClass(class_: dbClass):
-    return await ClassRepo.createClass(class_)
+    async def createClass(self, class_: dbClass):
+        return await self.classRepo.createClass(class_)

@@ -1,40 +1,29 @@
 from typing import List
 
 from sqlmodel import Session, select
-from db_config import sql_engine
 from models import TestModel
 from models.dbModels import Test, TestQuestionMap, TestType as dbTestType
 
 
-engine = sql_engine()
+class TestRepo:
+    def __init__(self, db: Session):
+        self.db = db
 
-
-async def getTestList():
-    tests: List[TestModel] = []
-    with Session(engine) as session:
-        tests = session.exec(select(Test)).all()
+    async def getTestList(self):
+        tests: List[TestModel] = []
+        tests = self.db.exec(select(Test)).all()
         for test in tests:
-            test.question_map = session.exec(
+            test.question_map = self.db.exec(
                 select(TestQuestionMap).where(TestQuestionMap.id == test.id)
             ).first()
-        session.close()
-    return tests
+        return tests
 
+    async def getTestTypes(self):
+        return self.db.exec(select(dbTestType)).all()
 
-async def getTestTypes():
-    test_types: List[dbTestType] = []
-    with Session(engine) as session:
-        test_types = session.exec(select(dbTestType)).all()
-        session.close()
-    return test_types
-
-
-async def createTest(test: TestModel) -> TestModel:
-    created_test: TestModel
-
-    with Session(engine) as session:
-        session.add(test)
-        session.commit()
-        test_obj = session.exec(select(Test).where(Test.id == test.id)).first()
-        session.close()
-    return test_obj
+    async def createTest(self, test: TestModel) -> TestModel:
+        created_test: TestModel
+        self.db.add(test)
+        self.db.expire()
+        test_obj = self.db.exec(select(Test).where(Test.id == test.id)).first()
+        return test_obj

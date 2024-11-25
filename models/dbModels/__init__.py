@@ -21,3 +21,8 @@ from .Fib import toFib as toFib
 from .MatchA import toMatchA as toMatchA
 from .MatchB import toMatchB as toMatchB
 from .ReasonAssertion import toReasonAssertion as toReasonAssertion
+from .Test import toTest as toTest
+from .TestQuestionMap import toTestQuestionMap as toTestQuestionMap
+from .QuestionSubquestionMap import toQuestionSubquestionMap as toQuestionSubquestionMap
+from .TestSectionMap import toTestSectionMap as toTestSectionMap
+from .QuestionImages import toQuestionImages as toQuestionImages

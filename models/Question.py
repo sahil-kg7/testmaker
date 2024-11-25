@@ -34,5 +34,7 @@ def toQuestion(res) -> Question:
         match_a_option=res.match_a_option if "match_a_option" in res._fields else None,
         match_b_option=res.match_b_option if "match_b_option" in res._fields else None,
         mcq_option=res.mcq_option if "mcq_option" in res._fields else None,
-        reason_assertion=res.reason_assertion if "reason" in res._fields else None,
+        reason_assertion=(
+            res.reason_assertion if "reason_assertion" in res._fields else None
+        ),
     )

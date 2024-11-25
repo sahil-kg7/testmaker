@@ -6,5 +6,13 @@ class QuestionImages(SQLModel, table=True):
 
     id: str = Field(primary_key=True)  # uuid
     question_id: str = Field(foreign_key="question_details.id")  # uuid
-    position: int
-    name: str | None = None
+    image_position: int
+    image_name: str | None = None
+
+
+def toQuestionImages(res) -> QuestionImages:
+    return QuestionImages(
+        question_id=res.question_id,
+        image_position=res.position,
+        image_name=res.image_name,
+    )

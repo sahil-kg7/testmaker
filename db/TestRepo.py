@@ -1,5 +1,3 @@
-from typing import List
-
 from sqlalchemy import text
 from sqlmodel import Session, select
 from models import TestModel
@@ -22,16 +20,16 @@ class TestRepo:
     def __init__(self, db: Session):
         self.db = db
 
-    async def getTestList(self):
-        tests: List[TestModel] = []
-        tests = self.db.exec(select(dbTest)).all()
-        for test in tests:
-            test.question_map = self.db.exec(
-                select(dbTestQuesMap).where(dbTestQuesMap.id == test.id)
-            ).first()
+    async def getTestList(self, page: int):
+        tests: list[TestModel] = []
+        tests = self.db.exec(select(dbTest).join()).all()
+        # for test in tests:
+        #     test.question_map = self.db.exec(
+        #         select(dbTestQuesMap).where(dbTestQuesMap.id == test.id)
+        #     ).first()
         return tests
 
-    async def getTestTypes(self) -> List[dbTestType]:
+    async def getTestTypes(self) -> list[dbTestType]:
         return self.db.exec(select(dbTestType)).all()
 
     async def createTest(self, test: dbTest) -> dbTest:
@@ -60,9 +58,9 @@ class TestRepo:
             raise
 
     async def createTestQuestionMap(
-        self, testId: str, quesMap: List[dbTestQuesMap]
-    ) -> List[dbTestQuesMap]:
-        createdTestQuestionMap: List[dbTestQuesMap] = []
+        self, testId: str, quesMap: list[dbTestQuesMap]
+    ) -> list[dbTestQuesMap]:
+        createdTestQuestionMap: list[dbTestQuesMap] = []
         try:
             for ques in quesMap:
                 res = self.db.exec(
@@ -82,9 +80,9 @@ class TestRepo:
             raise
 
     async def createQuesSubquesMap(
-        self, testId: str, subquesMap: List[dbQuesSubquesMap]
-    ) -> List[dbQuesSubquesMap]:
-        createdQuesSubquesMap: List[dbQuesSubquesMap] = []
+        self, testId: str, subquesMap: list[dbQuesSubquesMap]
+    ) -> list[dbQuesSubquesMap]:
+        createdQuesSubquesMap: list[dbQuesSubquesMap] = []
         try:
             for subques in subquesMap:
                 res = self.db.exec(
@@ -105,9 +103,9 @@ class TestRepo:
             raise
 
     async def createTestSectionMap(
-        self, testId: str, sectionMap: List[dbTestSectionMap]
-    ) -> List[dbTestSectionMap]:
-        createdTestSectionMap: List[dbTestSectionMap] = []
+        self, testId: str, sectionMap: list[dbTestSectionMap]
+    ) -> list[dbTestSectionMap]:
+        createdTestSectionMap: list[dbTestSectionMap] = []
         try:
             for section in sectionMap:
                 res = self.db.exec(
@@ -127,9 +125,9 @@ class TestRepo:
             raise
 
     async def createQuestionImages(
-        self, testId: str, questionImages: List[dbQuestionImages]
-    ) -> List[dbQuestionImages]:
-        createdQuestionImages: List[dbQuestionImages] = []
+        self, testId: str, questionImages: list[dbQuestionImages]
+    ) -> list[dbQuestionImages]:
+        createdQuestionImages: list[dbQuestionImages] = []
         try:
             for image in questionImages:
                 res = self.db.exec(

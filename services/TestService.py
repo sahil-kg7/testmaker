@@ -1,4 +1,3 @@
-from typing import List
 from sqlmodel import Session
 from db.TestRepo import TestRepo
 from models import TestModel, toTestModel
@@ -10,10 +9,10 @@ class TestService:
         self.db = db
         self.testRepo = TestRepo(db)
 
-    async def getTestList(self):
-        return await self.testRepo.getTestList()
+    async def getTestList(self, page: int):
+        return await self.testRepo.getTestList(page)
 
-    async def getTestTypes(self) -> List[dbTestType]:
+    async def getTestTypes(self) -> list[dbTestType]:
         return await self.testRepo.getTestTypes()
 
     async def createTest(self, test: TestModel) -> TestModel:

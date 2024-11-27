@@ -1,5 +1,5 @@
-# from typing import List
-from typing import List
+#
+
 from sqlmodel import Session, select
 from sqlalchemy import text
 from models import Question, toQuestion
@@ -48,7 +48,7 @@ class QuestionRepo:
 
     async def createMcq(self, question: Question):
         createdQuestion: Question
-        createdMcqOptions: List[Mcq] = []
+        createdMcqOptions: list[Mcq] = []
         try:
             createdQuestion = await self.createGeneral(question)
             for option in question.mcq_option:
@@ -68,7 +68,7 @@ class QuestionRepo:
 
     async def createFib(self, question: Question):
         createdQuestion: Question
-        createdFibWords: List[Fib] = []
+        createdFibWords: list[Fib] = []
         try:
             createdQuestion = await self.createGeneral(question)
             for fib in question.fib_missing_word:
@@ -88,8 +88,8 @@ class QuestionRepo:
 
     async def createMatch(self, question: Question):
         createdQuestion: Question
-        createdMatchAOptions: List[MatchA] = []
-        createdMatchBOptions: List[MatchB] = []
+        createdMatchAOptions: list[MatchA] = []
+        createdMatchBOptions: list[MatchB] = []
         try:
             createdQuestion = await self.createGeneral(question)
             for a in question.match_a_option:

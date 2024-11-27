@@ -1,4 +1,3 @@
-from typing import List
 from pydantic import BaseModel
 
 from models.dbModels import Fib, MatchA, MatchB, Mcq, ReasonAssertion
@@ -11,10 +10,10 @@ class Question(BaseModel):
     difficulty: str | None = None  # uuid
     marks: int
     content: str | None = None
-    fib_missing_word: List[Fib] | None = None
-    match_a_option: List[MatchA] | None = None
-    match_b_option: List[MatchB] | None = None
-    mcq_option: List[Mcq] | None = None
+    fib_missing_word: list[Fib] | None = None
+    match_a_option: list[MatchA] | None = None
+    match_b_option: list[MatchB] | None = None
+    mcq_option: list[Mcq] | None = None
     reason_assertion: ReasonAssertion | None = None
 
 

@@ -1,4 +1,3 @@
-from typing import List
 from pydantic import BaseModel
 
 from models import Question
@@ -20,11 +19,11 @@ class TestModel(BaseModel):
     section_count: int | None = None
     time_duration: int
     maximum_marks: int
-    questions: List[Question] | None = None
-    question_map: List[TestQuestionMap] | None = None
-    subquestion_map: List[QuestionSubquestionMap] | None = None
-    section_map: List[TestSectionMap] | None = None
-    question_images: List[QuestionImages] | None = None
+    questions: list[Question] | None = None
+    question_map: list[TestQuestionMap] | None = None
+    subquestion_map: list[QuestionSubquestionMap] | None = None
+    section_map: list[TestSectionMap] | None = None
+    question_images: list[QuestionImages] | None = None
 
 
 def toTestModel(res) -> TestModel:

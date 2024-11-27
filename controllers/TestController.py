@@ -13,9 +13,9 @@ router = APIRouter(
 
 
 @router.get("/")
-async def getTest(db: Session = Depends(get_db)):
+async def getTest(page: int, db: Session = Depends(get_db)):
     testService: TestService = TestService(db)
-    return await testService.getTestList()
+    return await testService.getTestList(page)
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)

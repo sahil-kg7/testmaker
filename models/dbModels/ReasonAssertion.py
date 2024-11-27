@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import Field, SQLModel
 
 
@@ -8,6 +9,8 @@ class ReasonAssertion(SQLModel, table=True):
     question_id: str = Field(foreign_key="question_details.id")  # uuid
     reason_statement: str
     assertion_statement: str
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
 
 
 def toReasonAssertion(res) -> ReasonAssertion:

@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import Field, SQLModel
 
 
@@ -9,6 +10,8 @@ class QuestionSubquestionMap(SQLModel, table=True):
     question_id: str = Field(foreign_key="question_details.id")  # uuid
     subquestion_id: str = Field(foreign_key="question_details.id")  # uuid
     subquestion_number: int
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
 
 
 def toQuestionSubquestionMap(res) -> QuestionSubquestionMap:

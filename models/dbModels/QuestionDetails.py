@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import Field, SQLModel
 
 
@@ -10,3 +11,5 @@ class QuestionDetails(SQLModel, table=True):
     difficulty: str = Field(foreign_key="question_difficulty.id")  # uuid
     marks: int
     content: str | None = None
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)

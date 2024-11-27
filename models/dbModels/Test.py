@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import Field, SQLModel
 
 
@@ -13,6 +14,8 @@ class Test(SQLModel, table=True):
     section_count: int | None = None
     time_duration: int
     maximum_marks: int
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
 
 
 def toTest(res) -> Test:

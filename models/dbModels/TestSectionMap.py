@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import Field, SQLModel
 
 
@@ -8,6 +9,8 @@ class TestSectionMap(SQLModel, table=True):
     test_id: str = Field(foreign_key="test.id")  # uuid
     section_number: int = Field(default=0)
     initial_ques_number: int = Field(default=0)
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
 
 
 def toTestSectionMap(res) -> TestSectionMap:

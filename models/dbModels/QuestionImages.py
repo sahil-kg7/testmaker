@@ -1,3 +1,4 @@
+import datetime
 from sqlmodel import Field, SQLModel
 
 
@@ -8,6 +9,8 @@ class QuestionImages(SQLModel, table=True):
     question_id: str = Field(foreign_key="question_details.id")  # uuid
     image_position: int
     image_name: str | None = None
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
 
 
 def toQuestionImages(res) -> QuestionImages:

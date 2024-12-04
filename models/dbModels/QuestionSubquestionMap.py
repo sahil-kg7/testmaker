@@ -16,6 +16,7 @@ class QuestionSubquestionMap(SQLModel, table=True):
 
 def toQuestionSubquestionMap(res) -> QuestionSubquestionMap:
     return QuestionSubquestionMap(
+        id=res.id,
         test_id=res.test_id,
         question_id=res.question_id,
         subquestion_id=res.subquestion_id,

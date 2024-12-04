@@ -12,7 +12,7 @@ class SubjectRepo:
     async def createSubject(self, subject: dbSubject) -> dbSubject:
         subject_obj = dbSubject()
         self.db.add(subject)
-        self.db.expire()
+        self.db.expire_all()
         subject_obj = self.db.exec(
             select(dbSubject).where(dbSubject.id == subject.id)
         ).first()

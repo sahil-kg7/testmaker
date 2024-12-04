@@ -3,6 +3,8 @@ from sqlalchemy import URL, create_engine
 from configparser import ConfigParser
 from sqlmodel import Session
 
+# from sqlalchemy.orm import sessionmaker
+
 
 def __read_config(filename="app_config.ini", section="mysql"):
     config = ConfigParser()
@@ -29,8 +31,11 @@ def __sql_engine():
     return create_engine(url_obj)
 
 
+engine = __sql_engine()
+# SessionLocal = sessionmaker(class_=Session, autoflush=False, bind=engine)
+
+
 def get_db() -> Generator[Session, None, None]:
-    engine = __sql_engine()
     try:
         with Session(engine) as db:
             db.begin()

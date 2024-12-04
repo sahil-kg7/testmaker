@@ -13,3 +13,16 @@ class QuestionDetails(SQLModel, table=True):
     content: str | None = None
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
+
+
+def toQuestionDetails(res) -> QuestionDetails:
+    return QuestionDetails(
+        id=res.id,
+        question_type_id=res.question_type_id,
+        subject_id=res.subject_id,
+        difficulty=res.difficulty,
+        marks=res.marks,
+        content=res.content,
+        created_on=res.created_on,
+        updated_on=res.updated_on,
+    )

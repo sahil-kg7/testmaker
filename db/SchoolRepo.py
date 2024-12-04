@@ -12,7 +12,7 @@ class SchoolRepo:
     async def createSchool(self, school: dbSchool) -> dbSchool:
         school_obj = dbSchool()
         self.db.add(school)
-        self.db.expire()
+        self.db.expire_all()
         school_obj = self.db.exec(
             select(dbSchool).where(dbSchool.id == school.id)
         ).first()

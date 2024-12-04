@@ -1,6 +1,6 @@
 from sqlmodel import Session
 from db.TestRepo import TestRepo
-from models import TestModel, toTestModel
+from models import TestModel, toTestModelFromDbTest
 from models.dbModels import TestType as dbTestType
 
 
@@ -16,23 +16,27 @@ class TestService:
         return await self.testRepo.getTestTypes()
 
     async def createTest(self, test: TestModel) -> TestModel:
-        createdTest: TestModel
-        testDetails = await self.testRepo.createTest(test)
-        createdTest = toTestModel(testDetails)
-        createdTestQuesMap = await self.testRepo.createTestQuestionMap(
-            testDetails.id, test.question_map
-        )
-        createdQuesSubquesMap = await self.testRepo.createQuesSubquesMap(
-            testDetails.id, test.subquestion_map
-        )
-        createdTestSectionMap = await self.testRepo.createTestSectionMap(
-            testDetails.id, test.section_map
-        )
-        createdQuestionImages = await self.testRepo.createQuestionImages(
-            testDetails.id, test.question_images
-        )
-        createdTest.question_map = createdTestQuesMap
-        createdTest.subquestion_map = createdQuesSubquesMap
-        createdTest.section_map = createdTestSectionMap
-        createdTest.question_images = createdQuestionImages
-        return createdTest
+        try:
+            createdTest: TestModel
+            testDetails = await self.testRepo.createTest(test)
+            createdTest = toTestModelFromDbTest(testDetails)
+            createdTestQuesMap = await self.testRepo.createTestQuestionMap(
+                testDetails.id, test.question_map
+            )
+            createdQuesSubquesMap = await self.testRepo.createQuesSubquesMap(
+                testDetails.id, test.subquestion_map
+            )
+            createdTestSectionMap = await self.testRepo.createTestSectionMap(
+                testDetails.id, test.section_map
+            )
+            createdQuestionImages = await self.testRepo.createQuestionImages(
+                testDetails.id, test.question_images
+            )
+            createdTest.question_map = createdTestQuesMap
+            createdTest.subquestion_map = createdQuesSubquesMap
+            createdTest.section_map = createdTestSectionMap
+            createdTest.question_images = createdQuestionImages
+            return createdTest
+        except Exception as e:
+            print("Error occurred in service while creating test.", e.__str__())
+            raise

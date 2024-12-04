@@ -42,7 +42,7 @@ class QuestionRepo:
             ).first()
             createdQuestion = toQuestion(result)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred in db while creating general question")
             raise
 
@@ -62,7 +62,7 @@ class QuestionRepo:
                 createdMcqOptions.append(toMcq(res))
             createdQuestion.mcq_option = createdMcqOptions
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred in db while creating mcq question")
             raise
 
@@ -82,7 +82,7 @@ class QuestionRepo:
                 createdFibWords.append(toFib(res))
             createdQuestion.fib_missing_word = createdFibWords
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred in db while creating fib question")
             raise
 
@@ -113,7 +113,7 @@ class QuestionRepo:
             createdQuestion.match_a_option = createdMatchAOptions
             createdQuestion.match_b_option = createdMatchBOptions
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred in db while creating match question")
             raise
 
@@ -135,6 +135,6 @@ class QuestionRepo:
             createdRA = toReasonAssertion(res)
             createdQuestion.reason_assertion = createdRA
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating reason-assertion question")
             raise

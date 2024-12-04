@@ -15,7 +15,8 @@ class TestSectionMap(SQLModel, table=True):
 
 def toTestSectionMap(res) -> TestSectionMap:
     return TestSectionMap(
+        id=res.id,
         test_id=res.test_id,
-        section_number=res.section,
+        section_number=res.section_number,
         initial_ques_number=res.initial_ques_number,
     )

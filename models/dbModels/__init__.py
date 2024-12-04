@@ -26,3 +26,4 @@ from .TestQuestionMap import toTestQuestionMap as toTestQuestionMap
 from .QuestionSubquestionMap import toQuestionSubquestionMap as toQuestionSubquestionMap
 from .TestSectionMap import toTestSectionMap as toTestSectionMap
 from .QuestionImages import toQuestionImages as toQuestionImages
+from .QuestionDetails import toQuestionDetails as toQuestionDetails

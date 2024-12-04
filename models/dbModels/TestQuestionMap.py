@@ -15,7 +15,8 @@ class TestQuestionMap(SQLModel, table=True):
 
 def toTestQuestionMap(res) -> TestQuestionMap:
     return TestQuestionMap(
+        id=res.id,
         test_id=res.test_id,
         question_id=res.question_id,
-        question_position=res.position,
+        question_position=res.question_position,
     )

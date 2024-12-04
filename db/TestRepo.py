@@ -1,8 +1,9 @@
 from sqlalchemy import text
 from sqlmodel import Session, select
-from models import TestModel
+from models import TestModel, toTestModelFromDbTest
 from models.dbModels import (
-    QuestionImages as dbQuestionImages,
+    QuestionDetails as dbQuestion,
+    QuestionImages as dbQuestionImage,
     QuestionSubquestionMap as dbQuesSubquesMap,
     Test as dbTest,
     TestQuestionMap as dbTestQuesMap,
@@ -13,21 +14,68 @@ from models.dbModels import (
     toQuestionSubquestionMap,
     toTestSectionMap,
     toQuestionImages,
+    toQuestionDetails,
 )
 
 
 class TestRepo:
+    # default page size is 10
     def __init__(self, db: Session):
         self.db = db
+        self.pageSize = 10
 
     async def getTestList(self, page: int):
-        tests: list[TestModel] = []
-        tests = self.db.exec(select(dbTest).join()).all()
-        # for test in tests:
-        #     test.question_map = self.db.exec(
-        #         select(dbTestQuesMap).where(dbTestQuesMap.id == test.id)
-        #     ).first()
-        return tests
+        try:
+            tests: list[TestModel] = []
+            testRes = self.db.exec(
+                select(dbTest).order_by(dbTest.created_on).offset(page * self.pageSize)
+            ).all()
+            tests = [toTestModelFromDbTest(test) for test in testRes]
+            for test in tests:
+                test.questions = []
+                test.question_map = self.db.exec(
+                    select(dbTestQuesMap).where(dbTestQuesMap.test_id == test.id)
+                ).all()
+                test.questions.extend(
+                    [
+                        toQuestionDetails(ques)
+                        for ques in self.db.exec(
+                            select(dbQuestion).where(
+                                dbQuestion.id.in_(
+                                    [
+                                        quesMap.question_id
+                                        for quesMap in test.question_map
+                                    ]
+                                )
+                            )
+                        ).all()
+                    ]
+                )
+                test.subquestion_map = self.db.exec(
+                    select(dbQuesSubquesMap).where(dbQuesSubquesMap.test_id == test.id)
+                ).all()
+                test.questions.extend(
+                    [
+                        toQuestionDetails(subques)
+                        for subques in self.db.exec(
+                            select(dbQuestion).where(
+                                dbQuestion.id.in_(
+                                    [
+                                        subquesMap.subquestion_id
+                                        for subquesMap in test.subquestion_map
+                                    ]
+                                )
+                            )
+                        )
+                    ]
+                )
+                test.section_map = self.db.exec(
+                    select(dbTestSectionMap).where(dbTestSectionMap.test_id == test.id)
+                ).all()
+            return tests
+        except Exception as e:
+            print("Error occurred in db while getting test list.", e.__str__())
+            raise
 
     async def getTestTypes(self) -> list[dbTestType]:
         return self.db.exec(select(dbTestType)).all()
@@ -50,11 +98,11 @@ class TestRepo:
                     "maximumMarks": test.maximum_marks,
                 },
             ).first()
-            self.db.expire()
+            self.db.expire_all()
             createdTest = toTest(res)
             return createdTest
-        except:
-            print("Error occurred in db while creating test")
+        except Exception as e:
+            print("Error occurred in db while creating test.", e.__str__())
             raise
 
     async def createTestQuestionMap(
@@ -75,8 +123,8 @@ class TestRepo:
                 ).first()
                 createdTestQuestionMap.append(toTestQuestionMap(res))
             return createdTestQuestionMap
-        except:
-            print("Error occurred in db while creating test question map")
+        except Exception as e:
+            print("Error occurred in db while creating test question map.", e.__str__())
             raise
 
     async def createQuesSubquesMap(
@@ -98,8 +146,11 @@ class TestRepo:
                 ).first()
                 createdQuesSubquesMap.append(toQuestionSubquestionMap(res))
             return createdQuesSubquesMap
-        except:
-            print("Error occurred in db while creating question subquestion map")
+        except Exception as e:
+            print(
+                "Error occurred in db while creating question subquestion map",
+                e.__str__(),
+            )
             raise
 
     async def createTestSectionMap(
@@ -120,14 +171,14 @@ class TestRepo:
                 ).first()
                 createdTestSectionMap.append(toTestSectionMap(res))
             return createdTestSectionMap
-        except:
-            print("Error occurred in db while creating test section map")
+        except Exception as e:
+            print("Error occurred in db while creating test section map", e.__str__())
             raise
 
     async def createQuestionImages(
-        self, testId: str, questionImages: list[dbQuestionImages]
-    ) -> list[dbQuestionImages]:
-        createdQuestionImages: list[dbQuestionImages] = []
+        self, testId: str, questionImages: list[dbQuestionImage]
+    ) -> list[dbQuestionImage]:
+        createdQuestionImages: list[dbQuestionImage] = []
         try:
             for image in questionImages:
                 res = self.db.exec(
@@ -142,7 +193,7 @@ class TestRepo:
                     },
                 ).first()
                 createdQuestionImages.append(toQuestionImages(res))
-            return
-        except:
-            print("Error occurred in db while creating question images")
+            return createdQuestionImages
+        except Exception as e:
+            print("Error occurred in db while creating question images", e.__str__())
             raise

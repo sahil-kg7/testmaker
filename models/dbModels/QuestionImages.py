@@ -15,6 +15,7 @@ class QuestionImages(SQLModel, table=True):
 
 def toQuestionImages(res) -> QuestionImages:
     return QuestionImages(
+        id=res.id,
         question_id=res.question_id,
         image_position=res.position,
         image_name=res.image_name,

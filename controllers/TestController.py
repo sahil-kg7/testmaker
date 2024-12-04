@@ -14,19 +14,28 @@ router = APIRouter(
 
 @router.get("/")
 async def getTest(page: int, db: Session = Depends(get_db)):
-    testService: TestService = TestService(db)
-    return await testService.getTestList(page)
+    try:
+        testService: TestService = TestService(db)
+        return await testService.getTestList(page)
+    except Exception as e:
+        print("Error occurred in controller while getting test list.", e.__str__())
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def createTest(
     test: TestModel, db: Session = Depends(get_db)
 ) -> TestModel | None:
-    testService: TestService = TestService(db)
-    return await testService.createTest(test)
+    try:
+        testService: TestService = TestService(db)
+        return await testService.createTest(test)
+    except Exception as e:
+        print("Error occurred in controller while creating test.", e.__str__())
 
 
 @router.get("/types")
 async def getTestTypes(db: Session = Depends(get_db)):
-    testService: TestService = TestService(db)
-    return await testService.getTestTypes()
+    try:
+        testService: TestService = TestService(db)
+        return await testService.getTestTypes()
+    except Exception as e:
+        print("Error occurred in controller while getting test types.", e.__str__())

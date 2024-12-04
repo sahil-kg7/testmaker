@@ -2,10 +2,11 @@ from pydantic import BaseModel
 
 from models import Question
 from models.dbModels import (
-    QuestionImages,
-    QuestionSubquestionMap,
-    TestQuestionMap,
-    TestSectionMap,
+    QuestionImages as dbQuestionImage,
+    QuestionSubquestionMap as dbQuesSubquesMap,
+    Test as dbTest,
+    TestQuestionMap as dbTestQuesMap,
+    TestSectionMap as dbTestSectionMap,
 )
 
 
@@ -20,10 +21,10 @@ class TestModel(BaseModel):
     time_duration: int
     maximum_marks: int
     questions: list[Question] | None = None
-    question_map: list[TestQuestionMap] | None = None
-    subquestion_map: list[QuestionSubquestionMap] | None = None
-    section_map: list[TestSectionMap] | None = None
-    question_images: list[QuestionImages] | None = None
+    question_map: list[dbTestQuesMap] | None = None
+    subquestion_map: list[dbQuesSubquesMap] | None = None
+    section_map: list[dbTestSectionMap] | None = None
+    question_images: list[dbQuestionImage] | None = None
 
 
 def toTestModel(res) -> TestModel:
@@ -46,4 +47,18 @@ def toTestModel(res) -> TestModel:
         question_images=(
             res.question_images if "question_images" in res._fields else None
         ),
+    )
+
+
+def toTestModelFromDbTest(res: dbTest) -> TestModel:
+    return TestModel(
+        id=res.id,
+        file_name=res.file_name,
+        school_id=res.school_id,
+        class_number=res.class_number,
+        subject_id=res.subject_id,
+        test_type_id=res.test_type_id,
+        section_count=res.section_count,
+        time_duration=res.time_duration,
+        maximum_marks=res.maximum_marks,
     )

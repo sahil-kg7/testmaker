@@ -36,7 +36,7 @@ class QuestionService:
         try:
             createdQuestion = await self.questionRepo.createGeneral(question)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating general question")
             raise
 
@@ -44,7 +44,7 @@ class QuestionService:
         try:
             createdQuestion = await self.questionRepo.createMcq(question)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating mcq question")
             raise
 
@@ -52,7 +52,7 @@ class QuestionService:
         try:
             createdQuestion = await self.questionRepo.createFib(question)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating fib question")
             raise
 
@@ -60,7 +60,7 @@ class QuestionService:
         try:
             createdQuestion = await self.questionRepo.createMatch(question)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating match question")
             raise
 
@@ -69,7 +69,7 @@ class QuestionService:
             ## only question type will be set to true/false
             createdQuestion = await self.questionRepo.createGeneral(question)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating true-false question")
             raise
 
@@ -78,7 +78,7 @@ class QuestionService:
             ## only question type will be set to subjective
             createdQuestion = await self.questionRepo.createGeneral(question)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating subjective question")
             raise
 
@@ -86,6 +86,6 @@ class QuestionService:
         try:
             createdQuestion = await self.questionRepo.createReasonAssertion(question)
             return createdQuestion
-        except:
+        except Exception as e:
             print("Error occurred while creating reason assertion question")
             raise

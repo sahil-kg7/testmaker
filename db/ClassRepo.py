@@ -12,7 +12,7 @@ class ClassRepo:
     async def createClass(self, class_: dbClass) -> dbClass:
         class_obj = dbClass
         self.db.add(class_)
-        self.db.expire()
+        self.db.expire_all()
         class_obj = self.db.exec(
             select(dbClass).where(dbClass.class_number == class_.class_number)
         ).first()

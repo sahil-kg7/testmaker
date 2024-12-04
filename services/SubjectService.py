@@ -12,5 +12,5 @@ class SubjectService:
         return await self.subjectRepo.getSubjectList()
 
     async def createSubject(self, subject: dbSubject):
-        subject.id = uuid.uuid4()
+        subject.id = uuid.uuid4().__str__()
         return await self.subjectRepo.createSubject(subject)

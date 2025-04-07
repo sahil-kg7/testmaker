@@ -1,0 +1,6 @@
+{
+    "typeCheckingMode": "strict",
+    "reportMissingImports": true,
+    "reportUndefinedVariable": true,
+    "reportMissingModuleSource": true,
+}

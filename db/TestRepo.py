@@ -2,8 +2,6 @@ from sqlalchemy import text
 from sqlmodel import Session, select
 from models import TestModel, toTestModelFromDbTest
 from models.dbModels import (
-    QuestionDetails as dbQuestion,
-    QuestionImages as dbQuestionImage,
     QuestionSubquestionMap as dbQuesSubquesMap,
     Test as dbTest,
     TestQuestionMap as dbTestQuesMap,
@@ -13,8 +11,6 @@ from models.dbModels import (
     toTestQuestionMap,
     toQuestionSubquestionMap,
     toTestSectionMap,
-    toQuestionImages,
-    toQuestionDetails,
 )
 
 
@@ -31,50 +27,42 @@ class TestRepo:
                 select(dbTest).order_by(dbTest.created_on).offset(page * self.pageSize)
             ).all()
             tests = [toTestModelFromDbTest(test) for test in testRes]
-            for test in tests:
-                test.questions = []
-                test.question_map = self.db.exec(
-                    select(dbTestQuesMap).where(dbTestQuesMap.test_id == test.id)
-                ).all()
-                test.questions.extend(
-                    [
-                        toQuestionDetails(ques)
-                        for ques in self.db.exec(
-                            select(dbQuestion).where(
-                                dbQuestion.id.in_(
-                                    [
-                                        quesMap.question_id
-                                        for quesMap in test.question_map
-                                    ]
-                                )
-                            )
-                        ).all()
-                    ]
-                )
-                test.subquestion_map = self.db.exec(
-                    select(dbQuesSubquesMap).where(dbQuesSubquesMap.test_id == test.id)
-                ).all()
-                test.questions.extend(
-                    [
-                        toQuestionDetails(subques)
-                        for subques in self.db.exec(
-                            select(dbQuestion).where(
-                                dbQuestion.id.in_(
-                                    [
-                                        subquesMap.subquestion_id
-                                        for subquesMap in test.subquestion_map
-                                    ]
-                                )
-                            )
-                        )
-                    ]
-                )
-                test.section_map = self.db.exec(
-                    select(dbTestSectionMap).where(dbTestSectionMap.test_id == test.id)
-                ).all()
             return tests
         except Exception as e:
             print("Error occurred in db while getting test list.", e.__str__())
+            raise
+
+    async def getTestQuestionMap(self, testId: str) -> list[dbTestQuesMap]:
+        try:
+            testQuestionMap: list[dbTestQuesMap] = []
+            testQuestionMap = self.db.exec(
+                select(dbTestQuesMap).where(dbTestQuesMap.test_id == testId)
+            ).all()
+            return testQuestionMap
+        except Exception as e:
+            print("Error occurred in db while getting test question map.", e.__str__())
+            raise
+
+    async def getSubquestionMap(self, testId: str) -> list[dbQuesSubquesMap]:
+        try:
+            subquestionMap: list[dbQuesSubquesMap] = []
+            subquestionMap = self.db.exec(
+                select(dbQuesSubquesMap).where(dbQuesSubquesMap.test_id == testId)
+            ).all()
+            return subquestionMap
+        except Exception as e:
+            print("Error occurred in db while getting subquestion map.", e.__str__())
+            raise
+
+    async def getSectionMap(self, testId: str) -> list[dbTestSectionMap]:
+        try:
+            sectionMap: list[dbTestSectionMap] = []
+            sectionMap = self.db.exec(
+                select(dbTestSectionMap).where(dbTestSectionMap.test_id == testId)
+            ).all()
+            return sectionMap
+        except Exception as e:
+            print("Error occurred in db while getting section map.", e.__str__())
             raise
 
     async def getTestTypes(self) -> list[dbTestType]:
@@ -173,27 +161,4 @@ class TestRepo:
             return createdTestSectionMap
         except Exception as e:
             print("Error occurred in db while creating test section map", e.__str__())
-            raise
-
-    async def createQuestionImages(
-        self, testId: str, questionImages: list[dbQuestionImage]
-    ) -> list[dbQuestionImage]:
-        createdQuestionImages: list[dbQuestionImage] = []
-        try:
-            for image in questionImages:
-                res = self.db.exec(
-                    text(
-                        "CALL create_question_images(:testId, :questionId, :imagePosition, :imageName)"
-                    ),
-                    params={
-                        "testId": testId,
-                        "questionId": image.question_id,
-                        "imagePosition": image.image_position,
-                        "imageName": image.image_name,
-                    },
-                ).first()
-                createdQuestionImages.append(toQuestionImages(res))
-            return createdQuestionImages
-        except Exception as e:
-            print("Error occurred in db while creating question images", e.__str__())
             raise

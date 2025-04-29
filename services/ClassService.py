@@ -11,5 +11,5 @@ class ClassService:
     async def getClassList(self):
         return await self.classRepo.getClassList()
 
-    async def createClass(self, class_: dbClass):
+    async def createClass(self, class_: dbClass) -> dbClass | None:
         return await self.classRepo.createClass(class_)

@@ -9,8 +9,7 @@ class ClassRepo:
     async def getClassList(self):
         return self.db.exec(select(dbClass)).all()
 
-    async def createClass(self, class_: dbClass) -> dbClass:
-        class_obj = dbClass
+    async def createClass(self, class_: dbClass) -> dbClass | None:
         self.db.add(class_)
         self.db.expire_all()
         class_obj = self.db.exec(

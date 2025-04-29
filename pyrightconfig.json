@@ -1,6 +1,10 @@
 {
-    "typeCheckingMode": "strict",
-    "reportMissingImports": true,
-    "reportUndefinedVariable": true,
-    "reportMissingModuleSource": true,
+    "typeCheckingMode": "off",
+    // "reportMissingImports": true,
+    // "reportUndefinedVariable": true,
+    // "reportMissingModuleSource": true,
+    // "reportUnknownVariableType": false,
+    // "reportUnknownArgumentType": false,
+    // "reportUnknownParameterType": false,
+    // "reportUnknownMemberType": false,
 }

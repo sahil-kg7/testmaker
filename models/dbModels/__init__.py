@@ -1,29 +1,17 @@
-from .Class import Class as Class
-from .School import School as School
-from .Fib import Fib as Fib
-from .MatchA import MatchA as MatchA
-from .MatchB import MatchB as MatchB
-from .Mcq import Mcq as Mcq
-from .QuestionDetails import QuestionDetails as QuestionDetails
-from .QuestionDifficulty import QuestionDifficulty as QuestionDifficulty
-from .QuestionImages import QuestionImages as QuestionImages
-from .QuestionSubquestionMap import QuestionSubquestionMap as QuestionSubquestionMap
-from .QuestionType import QuestionType as QuestionType
-from .ReasonAssertion import ReasonAssertion as ReasonAssertion
-from .School import School as School
-from .Subject import Subject as Subject
-from .Test import Test as Test
-from .TestQuestionMap import TestQuestionMap as TestQuestionMap
-from .TestSectionMap import TestSectionMap as TestSectionMap
-from .TestType import TestType as TestType
-from .Mcq import toMcq as toMcq
-from .Fib import toFib as toFib
-from .MatchA import toMatchA as toMatchA
-from .MatchB import toMatchB as toMatchB
-from .ReasonAssertion import toReasonAssertion as toReasonAssertion
-from .Test import toTest as toTest
-from .TestQuestionMap import toTestQuestionMap as toTestQuestionMap
-from .QuestionSubquestionMap import toQuestionSubquestionMap as toQuestionSubquestionMap
-from .TestSectionMap import toTestSectionMap as toTestSectionMap
-from .QuestionImages import toQuestionImages as toQuestionImages
-from .QuestionDetails import toQuestionDetails as toQuestionDetails
+from .Class import Class
+from .School import School
+from .Fib import Fib, toFib
+from .MatchA import MatchA, toMatchA
+from .MatchB import MatchB, toMatchB
+from .Mcq import Mcq, toMcq
+from .QuestionDetails import QuestionDetails, toQuestionDetails
+from .QuestionDifficulty import QuestionDifficulty
+from .QuestionImages import QuestionImages, toQuestionImages
+from .QuestionSubquestionMap import QuestionSubquestionMap, toQuestionSubquestionMap
+from .QuestionType import QuestionType
+from .ReasonAssertion import ReasonAssertion, toReasonAssertion
+from .Subject import Subject
+from .Test import Test, toTest
+from .TestQuestionMap import TestQuestionMap, toTestQuestionMap
+from .TestSectionMap import TestSectionMap, toTestSectionMap
+from .TestType import TestType

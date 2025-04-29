@@ -1,6 +1,8 @@
-#
-
-from sqlmodel import Session, select
+from typing import Optional
+from utils import LogUtil
+from exceptions import AppException, DatabaseException
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy import text
 from models import Question, toQuestion
 from models.dbModels import (
@@ -22,21 +24,40 @@ from models.dbModels import (
 
 
 class QuestionRepo:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
+        self.logger = LogUtil(__name__)
 
     async def getQuestionList(self):
-        return self.db.exec(select(QuestionDetails)).all()
-
-    async def getQuestionById(self, questionId: str) -> dbQuestion:
         try:
-            question: dbQuestion = self.db.exec(
-                select(dbQuestion).where(dbQuestion.id == questionId)
-            ).first()
+            statement = select(dbQuestion)
+            result = await self.db.exec(statement)
+            questions = result.all()
+            return questions
+        except Exception as e:
+            self.logger.error(
+                f"Failed to fetch question list: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to fetch question list", original_exception=e
+            ) from e
+
+    async def getQuestionById(self, questionId: str) -> Optional[dbQuestion]:
+        try:
+            statement = select(dbQuestion).where(dbQuestion.id == questionId)
+            result = await self.db.exec(statement)
+            question = result.first()
             return question
         except Exception as e:
-            print("Error occurred in db while getting question by id.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to fetch question with ID {questionId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to fetch question with ID {questionId}",
+                original_exception=e,
+            ) from e
 
     async def getQuestionsById(self, questionIds: list[str]) -> list[dbQuestion]:
         try:

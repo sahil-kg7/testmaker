@@ -88,13 +88,13 @@ def main():
     source_database = "test_maker"
 
     # Connection parameters to the target MySQL database
-    # target_host = "127.0.0.1"
-    # target_port = "3309"
-    # new_username = "new_username"
-    # new_password = "new_password"
-    # target_database = "my_database_two"
-    # target_username = "root"
-    # target_password = "root_password"
+    target_host = "localhost"
+    target_port = "3306"
+    new_username = "root"
+    new_password = "abcd"
+    target_database = "test_maker"
+    target_username = "root"
+    target_password = "abcd"
 
     # Path to save the backup locally
     backup_path = "/home/gandalf/dumps"
@@ -111,18 +111,28 @@ def main():
     # check_and_create_user(target_host, target_port, target_username, target_password, target_database, new_username, new_password)
 
     # Create a backup of the MySQL database
-    backup_file = backup_mysql_database(
-        source_host,
-        source_port,
-        source_username,
-        source_password,
-        source_database,
-        backup_path,
-    )
-    print(f"Database backup created: {backup_file}")
+    # backup_file = backup_mysql_database(
+    #     source_host,
+    #     source_port,
+    #     source_username,
+    #     source_password,
+    #     source_database,
+    #     backup_path,
+    # )
+    # print(f"Database backup created: {backup_file}")
 
     # Restore the database on the target server from the backup
-    # restore_mysql_database(target_host, target_port, target_username, target_password, target_database, backup_file)
+    backup_file = "./backups/test_maker_2025-06-07_01-04-03.sql"
+
+    # Restore the database on the target server from the backup
+    restore_mysql_database(
+        target_host,
+        target_port,
+        target_username,
+        target_password,
+        target_database,
+        backup_file,
+    )
     # print("Database backup restored on the target server.")
 
 

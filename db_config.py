@@ -1,8 +1,9 @@
-from typing import AsyncGenerator
-from sqlalchemy import URL
+from typing import Generator
+from sqlalchemy import URL, create_engine
 from configparser import ConfigParser
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlmodel import Session
+
+# from sqlalchemy.orm import sessionmaker
 
 
 def __read_config(filename="app_config.ini", section="mysql"):
@@ -27,23 +28,16 @@ def __sql_engine():
         port=data["port"],
         database=data["database"],
     )
-    return create_async_engine(url_obj, echo=True, future=True)
+    return create_engine(url_obj)
 
 
 engine = __sql_engine()
 # SessionLocal = sessionmaker(class_=Session, autoflush=False, bind=engine)
 
-# Async SessionMaker
-async_session = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False,
-)
 
-
-async def get_db() -> AsyncGenerator[AsyncSession, None, None]:
+def get_db() -> Generator[Session, None, None]:
     try:
-        async with async_session() as db:
+        with Session(engine) as db:
             db.begin()
             yield db
             db.commit()

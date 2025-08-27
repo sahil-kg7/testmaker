@@ -4,4 +4,22 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "sqlmodel",
+    "mysql-connector-python",
+    "pydantic",
+    "click",
+    "anyio",
+    "sniffio",
+    "h11",
+    "starlette",
+    "annotated-types",
+    "pydantic-core",
+    "typing-extensions",
+    "typing-inspection",
+    "idna",
+    "greenlet"
+]

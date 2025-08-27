@@ -12,6 +12,8 @@ from models.dbModels import (
     toQuestionSubquestionMap,
     toTestSectionMap,
 )
+from utils import LogUtil
+from exceptions import DatabaseException
 
 
 class TestRepo:
@@ -19,6 +21,7 @@ class TestRepo:
     def __init__(self, db: Session):
         self.db = db
         self.pageSize = 10
+        self.logger = LogUtil(__name__)
 
     async def getTestList(self, page: int):
         try:
@@ -29,8 +32,14 @@ class TestRepo:
             tests = [toTestModelFromDbTest(test) for test in testRes]
             return tests
         except Exception as e:
-            print("Error occurred in db while getting test list.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to fetch test list for page {page}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to fetch test list for page {page}",
+                original_exception=e,
+            ) from e
 
     async def getTestQuestionMap(self, testId: str) -> list[dbTestQuesMap]:
         try:
@@ -40,8 +49,14 @@ class TestRepo:
             ).all()
             return testQuestionMap
         except Exception as e:
-            print("Error occurred in db while getting test question map.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to fetch test question map for test ID {testId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to fetch test question map for test ID {testId}",
+                original_exception=e,
+            ) from e
 
     async def getSubquestionMap(self, testId: str) -> list[dbQuesSubquesMap]:
         try:
@@ -51,8 +66,14 @@ class TestRepo:
             ).all()
             return subquestionMap
         except Exception as e:
-            print("Error occurred in db while getting subquestion map.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to fetch subquestion map for test ID {testId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to fetch subquestion map for test ID {testId}",
+                original_exception=e,
+            ) from e
 
     async def getSectionMap(self, testId: str) -> list[dbTestSectionMap]:
         try:
@@ -62,15 +83,33 @@ class TestRepo:
             ).all()
             return sectionMap
         except Exception as e:
-            print("Error occurred in db while getting section map.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to fetch section map for test ID {testId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to fetch section map for test ID {testId}",
+                original_exception=e,
+            ) from e
 
     async def getTestTypes(self) -> list[dbTestType]:
-        return self.db.exec(select(dbTestType)).all()
+        try:
+            statement = select(dbTestType)
+            result = self.db.exec(statement)
+            testTypes = result.all()
+            return testTypes
+        except Exception as e:
+            self.logger.error(
+                f"Failed to fetch test types: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to fetch test types", original_exception=e
+            ) from e
 
     async def createTest(self, test: dbTest) -> dbTest:
-        createdTest: dbTest
         try:
+            createdTest: dbTest
             res = self.db.exec(
                 text(
                     "CALL create_test(:fileName, :schoolId, :classNumber, :subjectId, :testTypeId, :sectionCount, :timeDuration, :maximumMarks)"
@@ -90,14 +129,19 @@ class TestRepo:
             createdTest = toTest(res)
             return createdTest
         except Exception as e:
-            print("Error occurred in db while creating test.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to create test: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to create test", original_exception=e
+            ) from e
 
     async def createTestQuestionMap(
         self, testId: str, quesMap: list[dbTestQuesMap]
     ) -> list[dbTestQuesMap]:
-        createdTestQuestionMap: list[dbTestQuesMap] = []
         try:
+            createdTestQuestionMap: list[dbTestQuesMap] = []
             for ques in quesMap:
                 res = self.db.exec(
                     text(
@@ -112,14 +156,20 @@ class TestRepo:
                 createdTestQuestionMap.append(toTestQuestionMap(res))
             return createdTestQuestionMap
         except Exception as e:
-            print("Error occurred in db while creating test question map.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to create test question map for test ID {testId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to create test question map for test ID {testId}",
+                original_exception=e,
+            ) from e
 
     async def createQuesSubquesMap(
         self, testId: str, subquesMap: list[dbQuesSubquesMap]
     ) -> list[dbQuesSubquesMap]:
-        createdQuesSubquesMap: list[dbQuesSubquesMap] = []
         try:
+            createdQuesSubquesMap: list[dbQuesSubquesMap] = []
             for subques in subquesMap:
                 res = self.db.exec(
                     text(
@@ -135,17 +185,20 @@ class TestRepo:
                 createdQuesSubquesMap.append(toQuestionSubquestionMap(res))
             return createdQuesSubquesMap
         except Exception as e:
-            print(
-                "Error occurred in db while creating question subquestion map",
-                e.__str__(),
+            self.logger.error(
+                f"Failed to create question subquestion map for test ID {testId}: {e.__str__()}",
+                exc_info=True,
             )
-            raise
+            raise DatabaseException(
+                f"Failed to create question subquestion map for test ID {testId}",
+                original_exception=e,
+            ) from e
 
     async def createTestSectionMap(
         self, testId: str, sectionMap: list[dbTestSectionMap]
     ) -> list[dbTestSectionMap]:
-        createdTestSectionMap: list[dbTestSectionMap] = []
         try:
+            createdTestSectionMap: list[dbTestSectionMap] = []
             for section in sectionMap:
                 res = self.db.exec(
                     text(
@@ -160,5 +213,11 @@ class TestRepo:
                 createdTestSectionMap.append(toTestSectionMap(res))
             return createdTestSectionMap
         except Exception as e:
-            print("Error occurred in db while creating test section map", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to create test section map for test ID {testId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to create test section map for test ID {testId}",
+                original_exception=e,
+            ) from e

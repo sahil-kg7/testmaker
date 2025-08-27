@@ -3,6 +3,8 @@ from db.QuestionRepo import QuestionRepo
 from db.TestRepo import TestRepo
 from models import TestModel, toTestModelFromDbTest
 from models.dbModels import TestType as dbTestType, toQuestionDetails
+from utils import LogUtil
+from exceptions import AppException
 
 
 class TestService:
@@ -10,6 +12,7 @@ class TestService:
         self.db = db
         self.testRepo = TestRepo(db)
         self.questionRepo = QuestionRepo(db)
+        self.logger = LogUtil(__name__)
 
     async def getTestList(self, page: int):
         try:
@@ -47,11 +50,27 @@ class TestService:
                     )
             return tests
         except Exception as e:
-            print("Error occurred in service while getting test list.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to get test list for page {page}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise AppException(
+                f"Failed to get test list for page {page}",
+                original_exception=e,
+            ) from e
 
     async def getTestTypes(self) -> list[dbTestType]:
-        return await self.testRepo.getTestTypes()
+        try:
+            return await self.testRepo.getTestTypes()
+        except Exception as e:
+            self.logger.error(
+                f"Failed to get test types: {e.__str__()}",
+                exc_info=True,
+            )
+            raise AppException(
+                "Failed to get test types",
+                original_exception=e,
+            ) from e
 
     async def createTest(self, test: TestModel) -> TestModel:
         try:
@@ -67,14 +86,21 @@ class TestService:
             createdTestSectionMap = await self.testRepo.createTestSectionMap(
                 testDetails.id, test.section_map
             )
-            createdQuestionImages = await self.testRepo.createQuestionImages(
-                testDetails.id, test.question_images
-            )
+            # TODO: repo layer to be implemented
+            # createdQuestionImages = await self.testRepo.createQuestionImages(
+            #     testDetails.id, test.question_images
+            # )
             createdTest.question_map = createdTestQuesMap
             createdTest.subquestion_map = createdQuesSubquesMap
             createdTest.section_map = createdTestSectionMap
-            createdTest.question_images = createdQuestionImages
+            # createdTest.question_images = createdQuestionImages
             return createdTest
         except Exception as e:
-            print("Error occurred in service while creating test.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to create test: {e.__str__()}",
+                exc_info=True,
+            )
+            raise AppException(
+                "Failed to create test",
+                original_exception=e,
+            ) from e

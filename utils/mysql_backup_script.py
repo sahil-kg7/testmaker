@@ -72,11 +72,20 @@ def backup_mysql_database(host, port, username, password, database, backup_path)
 
 
 def restore_mysql_database(host, port, username, password, database, backup_file):
-    # Command to restore a database from a backup using mysql
-    restore_command = f"mysql --host={host} --port={port} --user={username} --password={password} {database} < {backup_file} 2>/dev/null"
-
-    # Execute the mysql command
-    subprocess.run(restore_command, shell=True)
+    restore_command = [
+        "mysql",
+        f"--host={host}",
+        f"--port={port}",
+        f"--user={username}",
+        f"--password={password}",
+        database,
+    ]
+    with open(backup_file, "rb") as infile:
+        result = subprocess.run(restore_command, stdin=infile)
+        if result.returncode != 0:
+            print("Restore failed.")
+        else:
+            print("Restore completed successfully.")
 
 
 def main():

@@ -61,30 +61,39 @@ class QuestionRepo:
 
     async def getQuestionsById(self, questionIds: list[str]) -> list[dbQuestion]:
         try:
-            questions: list[dbQuestion] = []
-            questions = self.db.exec(
-                select(dbQuestion).where(dbQuestion.id.in_(questionIds))
-            ).all()
+            statement = select(dbQuestion).where(dbQuestion.id.in_(questionIds))
+            result = await self.db.exec(statement)
+            questions = result.all()
             return questions
         except Exception as e:
-            print("Error occurred in db while getting questions.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to fetch questions with IDs {questionIds}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to fetch questions with IDs {questionIds}",
+                original_exception=e,
+            ) from e
 
     async def getQuestionImages(self, testId: str) -> list[dbQuestionImage]:
         try:
-            questionImages: list[dbQuestionImage] = []
-            questionImages = self.db.exec(
-                select(dbQuestionImage).where(dbQuestionImage.test_id == testId)
-            ).all()
+            statement = select(dbQuestionImage).where(dbQuestionImage.test_id == testId)
+            result = await self.db.exec(statement)
+            questionImages = result.all()
             return questionImages
         except Exception as e:
-            print("Error occurred in db while getting question images.", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to fetch question images for test ID {testId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to fetch question images for test ID {testId}",
+                original_exception=e,
+            ) from e
 
     async def createGeneral(self, question: Question):
-        createdQuestion: Question
         try:
-            result = self.db.exec(
+            result = await self.db.exec(
                 text(
                     "CALL create_general_question(:questionTypeId, :subjectId, :difficulty, :marks, :content)"
                 ),
@@ -95,90 +104,109 @@ class QuestionRepo:
                     "marks": question.marks,
                     "content": question.content,
                 },
-            ).first()
-            createdQuestion = toQuestion(result)
+            )
+            createdQuestion = toQuestion(result.first())
             return createdQuestion
         except Exception as e:
-            print("Error occurred in db while creating general question")
-            raise
+            self.logger.error(
+                f"Failed to create general question: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to create general question",
+                original_exception=e,
+            ) from e
 
     async def createMcq(self, question: Question):
-        createdQuestion: Question
-        createdMcqOptions: list[Mcq] = []
         try:
             createdQuestion = await self.createGeneral(question)
+            createdMcqOptions: list[Mcq] = []
             for option in question.mcq_option:
-                res = self.db.exec(
+                result = await self.db.exec(
                     text("CALL create_mcq_option(:questionId, :optionText)"),
                     params={
                         "questionId": createdQuestion.id,
                         "optionText": option.option_text,
                     },
-                ).first()
-                createdMcqOptions.append(toMcq(res))
+                )
+                createdMcqOptions.append(toMcq(result.first()))
             createdQuestion.mcq_option = createdMcqOptions
             return createdQuestion
         except Exception as e:
-            print("Error occurred in db while creating mcq question")
-            raise
+            self.logger.error(
+                f"Failed to create MCQ question: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to create MCQ question",
+                original_exception=e,
+            ) from e
 
     async def createFib(self, question: Question):
-        createdQuestion: Question
-        createdFibWords: list[Fib] = []
         try:
             createdQuestion = await self.createGeneral(question)
+            createdFibWords: list[Fib] = []
             for fib in question.fib_missing_word:
-                res = self.db.exec(
+                result = await self.db.exec(
                     text("CALL create_fib_missing_word(:questionId, :word)"),
                     params={
                         "questionId": createdQuestion.id,
                         "word": fib.missing_word,
                     },
-                ).first()
-                createdFibWords.append(toFib(res))
+                )
+                createdFibWords.append(toFib(result.first()))
             createdQuestion.fib_missing_word = createdFibWords
             return createdQuestion
         except Exception as e:
-            print("Error occurred in db while creating fib question")
-            raise
+            self.logger.error(
+                f"Failed to create FIB question: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to create FIB question",
+                original_exception=e,
+            ) from e
 
     async def createMatch(self, question: Question):
-        createdQuestion: Question
-        createdMatchAOptions: list[MatchA] = []
-        createdMatchBOptions: list[MatchB] = []
         try:
             createdQuestion = await self.createGeneral(question)
+            createdMatchAOptions: list[MatchA] = []
+            createdMatchBOptions: list[MatchB] = []
             for a in question.match_a_option:
-                res = self.db.exec(
+                result = await self.db.exec(
                     text("CALL create_match_a_option(:questionId, :optionText)"),
                     params={
                         "questionId": createdQuestion.id,
                         "optionText": a.match_option,
                     },
-                ).first()
-                createdMatchAOptions.append(toMatchA(res))
+                )
+                createdMatchAOptions.append(toMatchA(result.first()))
             for b in question.match_b_option:
-                res = self.db.exec(
+                result = await self.db.exec(
                     text("CALL create_match_b_option(:questionId, :optionText)"),
                     params={
                         "questionId": createdQuestion.id,
                         "optionText": b.match_option,
                     },
-                ).first()
-                createdMatchBOptions.append(toMatchB(res))
+                )
+                createdMatchBOptions.append(toMatchB(result.first()))
             createdQuestion.match_a_option = createdMatchAOptions
             createdQuestion.match_b_option = createdMatchBOptions
             return createdQuestion
         except Exception as e:
-            print("Error occurred in db while creating match question")
-            raise
+            self.logger.error(
+                f"Failed to create match question: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to create match question",
+                original_exception=e,
+            ) from e
 
     async def createReasonAssertion(self, question: Question):
-        createdQuestion: Question
-        createdRA: ReasonAssertion
         try:
             createdQuestion = await self.createGeneral(question)
-            res = self.db.exec(
+            result = await self.db.exec(
                 text(
                     "CALL create_reason_assertion_question(:questionId, :reasonStatement, :assertionStatement)"
                 ),
@@ -187,21 +215,27 @@ class QuestionRepo:
                     "reasonStatement": question.reason_assertion.reason_statement,
                     "assertionStatement": question.reason_assertion.assertion_statement,
                 },
-            ).first()
-            createdRA = toReasonAssertion(res)
+            )
+            createdRA = toReasonAssertion(result.first())
             createdQuestion.reason_assertion = createdRA
             return createdQuestion
         except Exception as e:
-            print("Error occurred while creating reason-assertion question")
-            raise
+            self.logger.error(
+                f"Failed to create reason-assertion question: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                "Failed to create reason-assertion question",
+                original_exception=e,
+            ) from e
 
     async def createQuestionImages(
         self, testId: str, questionImages: list[dbQuestionImage]
     ) -> list[dbQuestionImage]:
-        createdQuestionImages: list[dbQuestionImage] = []
         try:
+            createdQuestionImages: list[dbQuestionImage] = []
             for image in questionImages:
-                res = self.db.exec(
+                result = await self.db.exec(
                     text(
                         "CALL create_question_images(:testId, :questionId, :imagePosition, :imageName)"
                     ),
@@ -211,9 +245,15 @@ class QuestionRepo:
                         "imagePosition": image.image_position,
                         "imageName": image.image_name,
                     },
-                ).first()
-                createdQuestionImages.append(toQuestionImages(res))
+                )
+                createdQuestionImages.append(toQuestionImages(result.first()))
             return createdQuestionImages
         except Exception as e:
-            print("Error occurred in db while creating question images", e.__str__())
-            raise
+            self.logger.error(
+                f"Failed to create question images for test ID {testId}: {e.__str__()}",
+                exc_info=True,
+            )
+            raise DatabaseException(
+                f"Failed to create question images for test ID {testId}",
+                original_exception=e,
+            ) from e

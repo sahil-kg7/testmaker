@@ -1,7 +1,5 @@
 # testmaker
-an app to create test papers from the collection of various questions.
-
-this project will enable user to create test papers containing different types of questions such as one word, multiple choice, short answered, fill in the blanks, etc.
+This project allows users to create customizable test papers from a collection of questions, supporting multiple formats such as one-word answers, multiple choice, short answers, and fill-in-the-blanks.
 
 Steps to initiate the project with uv:
 

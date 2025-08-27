@@ -27,6 +27,7 @@ def __sql_engine():
         host=data["host"],
         port=data["port"],
         database=data["database"],
+        query={"unix_socket": "/var/snap/mysql/current/run/mysqld.sock"},
     )
     return create_engine(url_obj)
 

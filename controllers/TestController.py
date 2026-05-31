@@ -17,7 +17,7 @@ logger = LogUtil(__name__)
 
 
 @router.get("/")
-async def getTest(page: int, db: Session = Depends(get_db)):
+async def getTestList(page: int, db: Session = Depends(get_db)):
     try:
         testService: TestService = TestService(db)
         return await testService.getTestList(page)

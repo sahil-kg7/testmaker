@@ -28,7 +28,7 @@ class TestService:
                         )
                     ]
                 )
-                test.subquestion_map = await self.testRepo.getSubquestionMap(test.id)
+                test.subquestion_map = await self.testRepo.getQuesSubquesMap(test.id)
                 test.questions.extend(
                     [
                         toQuestionDetails(ques)

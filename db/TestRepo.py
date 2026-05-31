@@ -58,7 +58,7 @@ class TestRepo:
                 original_exception=e,
             ) from e
 
-    async def getSubquestionMap(self, testId: str) -> list[dbQuesSubquesMap]:
+    async def getQuesSubquesMap(self, testId: str) -> list[dbQuesSubquesMap]:
         try:
             subquestionMap: list[dbQuesSubquesMap] = []
             subquestionMap = self.db.exec(
